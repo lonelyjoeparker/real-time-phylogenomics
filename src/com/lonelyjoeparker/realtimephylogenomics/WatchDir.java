@@ -91,7 +91,7 @@ public class WatchDir {
     /**
      * Creates a WatchService and registers the given directory
      */
-    WatchDir(Path dir, boolean recursive) throws IOException {
+    public WatchDir(Path dir, boolean recursive) throws IOException {
         this.watcher = FileSystems.getDefault().newWatchService();
         this.keys = new HashMap<WatchKey,Path>();
         this.recursive = recursive;
@@ -111,7 +111,7 @@ public class WatchDir {
     /**
      * Process all events for keys queued to the watcher
      */
-    void processEvents() {
+    public void processEvents() {
         for (;;) {
 
             // wait for key to be signalled
@@ -170,7 +170,7 @@ public class WatchDir {
         }
     }
 
-    static void usage() {
+    public static void usage() {
         System.err.println("usage: java WatchDir [-r] dir");
         System.exit(-1);
     }
