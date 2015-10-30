@@ -1,10 +1,12 @@
 package com.lonelyjoeparker.realtimephylogenomics.sandbox;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import uk.ac.qmul.sbcs.evolution.convergence.AlignedSequenceRepresentation;
+import uk.ac.qmul.sbcs.evolution.convergence.util.BasicFileWriter;
 import uk.ac.qmul.sbcs.evolution.convergence.util.VerboseSystemCommand;
 
 import com.lonelyjoeparker.realtimephylogenomics.WatchDir;
@@ -55,6 +57,10 @@ public class TestImports {
         asr.getNumberOfSites();
         VerboseSystemCommand vsc = new VerboseSystemCommand("echo foo");
         System.out.println(vsc.output.toString());
+        FastqSimpleReader fqr = new FastqSimpleReader(new File("./examples/example_fastq.fastq"));
+        System.out.println(fqr.getParsedData());
+        File outputFile = new File("./examples/example.output.converted.fasta");
+        new BasicFileWriter(outputFile,fqr.getParsedData());
 	}
 
 }

@@ -15,10 +15,10 @@ import uk.ac.qmul.sbcs.evolution.convergence.util.CapitalisedFileReader;
  * @version 0.1
  */
 public class FastqSimpleReader {
-	ArrayList<String> inputData;
-	ArrayList<String> parsedData;
-	File inputFile;
-	
+	private ArrayList<String> inputData;
+	private ArrayList<String> parsedData;
+	private File inputFile;
+
 	/**
 	 * Constructor. Takes input as java.io.File. Assumes input file
 	 * contains FASTQ file formatted as sequential lines of:
@@ -30,29 +30,38 @@ public class FastqSimpleReader {
 	 * </ul>
 	 * @param inputFile
 	 */
-	public FastqSimpleReader(File inputFile){
-		inputData = new CapitalisedFileReader().loadSequences(inputFile);
+	public FastqSimpleReader(File inputFastqFile){
+		inputFile = inputFastqFile;
+		CapitalisedFileReader reader = new CapitalisedFileReader();
+		reader.setMinimumLineLengthInChars(0);
+		inputData = reader.loadSequences(inputFile);
 		// parse input
-		ArrayList<String> parsedData = new ArrayList<String>();
+		parsedData = new ArrayList<String>();
 		boolean inSeqLine = false;
 		for(String line:inputData){
+			char firstChar = line.charAt(0);
+			if(firstChar == '+'){
+				inSeqLine = false;
+			}
+			if(firstChar == '@'){
+				inSeqLine = true;
+				line = line.replace('@', '>');
+			}
 			if(inSeqLine){
 				parsedData.add(line);
-				inSeqLine = false;
-			}else{
-				char firstChar = line.charAt(0);
-				switch(firstChar){
-					case '@':{parsedData.add(line);inSeqLine = true;}
-					case '+':{inSeqLine = false;}
-					default:{
-						//do nothing
-						}
-					}
-				}	
 			}
-		}
+		}	
+	}
 
-	public ArrayList<String> getParsedData() {
-		return parsedData;
+	public String getParsedData() {
+		if(this.parsedData != null){
+			StringBuffer outputBuffer = new StringBuffer();
+			for(String parsed:parsedData){
+				outputBuffer.append(parsed + "\n");
+			}
+			return outputBuffer.toString();
+		}else{
+			return null;
+		}
 	}
 }
