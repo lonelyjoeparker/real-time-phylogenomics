@@ -9,8 +9,6 @@ import uk.ac.qmul.sbcs.evolution.convergence.AlignedSequenceRepresentation;
 import uk.ac.qmul.sbcs.evolution.convergence.util.BasicFileWriter;
 import uk.ac.qmul.sbcs.evolution.convergence.util.VerboseSystemCommand;
 
-import com.lonelyjoeparker.realtimephylogenomics.WatchDir;
-
 public class TestImports {
 
 	String [] args;

@@ -1,4 +1,4 @@
-package com.lonelyjoeparker.realtimephylogenomics;
+package com.lonelyjoeparker.realtimephylogenomics.sandbox;
 /*
  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.
  *
