@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import uk.ac.qmul.sbcs.evolution.convergence.AlignedSequenceRepresentation;
+import uk.ac.qmul.sbcs.evolution.convergence.util.VerboseSystemCommand;
 
 import com.lonelyjoeparker.realtimephylogenomics.WatchDir;
 
@@ -44,9 +45,16 @@ public class TestImports {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        /* 
+         * process dir events 
+         * run in separate thread
+         * 
         watcher.processEvents();
+         * */
         asr = new AlignedSequenceRepresentation();
         asr.getNumberOfSites();
+        VerboseSystemCommand vsc = new VerboseSystemCommand("echo foo");
+        System.out.println(vsc.output.toString());
 	}
 
 }
