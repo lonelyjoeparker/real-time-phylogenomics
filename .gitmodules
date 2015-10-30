@@ -1,0 +1,3 @@
+[submodule "qmul-genome-convergence-pipeline"]
+	path = qmul-genome-convergence-pipeline
+	url = https://github.com/lonelyjoeparker/qmul-genome-convergence-pipeline
