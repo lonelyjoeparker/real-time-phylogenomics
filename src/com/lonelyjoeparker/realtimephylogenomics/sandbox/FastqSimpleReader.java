@@ -53,7 +53,7 @@ public class FastqSimpleReader {
 		}	
 	}
 
-	public String getParsedData() {
+	public String getParsedDataAsString() {
 		if(this.parsedData != null){
 			StringBuffer outputBuffer = new StringBuffer();
 			for(String parsed:parsedData){
@@ -63,5 +63,10 @@ public class FastqSimpleReader {
 		}else{
 			return null;
 		}
+	}
+
+	public ArrayList<String> getParsedData() {
+		// TODO Auto-generated method stub
+		return parsedData;
 	}
 }

@@ -56,9 +56,9 @@ public class TestImports {
         VerboseSystemCommand vsc = new VerboseSystemCommand("echo foo");
         System.out.println(vsc.output.toString());
         FastqSimpleReader fqr = new FastqSimpleReader(new File("./examples/example_fastq.fastq"));
-        System.out.println(fqr.getParsedData());
+        System.out.println(fqr.getParsedDataAsString());
         File outputFile = new File("./examples/example.output.converted.fasta");
-        new BasicFileWriter(outputFile,fqr.getParsedData());
+        new BasicFileWriter(outputFile,fqr.getParsedDataAsString());
 	}
 
 }
