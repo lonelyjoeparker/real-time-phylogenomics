@@ -27,7 +27,6 @@ import java.util.Map;
 import com.lonelyjoeparker.realtimephylogenomics.sandbox.FastqSimpleReader;
 
 import uk.ac.qmul.sbcs.evolution.convergence.AlignedSequenceRepresentation;
-import uk.ac.qmul.sbcs.evolution.convergence.handlers.RAxMLAnalysisSGE;
 import uk.ac.qmul.sbcs.evolution.convergence.util.BasicFileWriter;
 import uk.ac.qmul.sbcs.evolution.convergence.util.TaxaLimitException;
 import uk.ac.qmul.sbcs.evolution.convergence.util.VerboseSystemCommand;
@@ -44,6 +43,7 @@ public class RealtimeReadAnalyzer {
 	private final Map<WatchKey,Path> keys;
 	private boolean trace = false;
 	private final WatchService watcher;
+	private RealtimeReadAnalyzerMVC GUI;
 
     @SuppressWarnings("unchecked")
     static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -60,20 +60,19 @@ public class RealtimeReadAnalyzer {
 
         // enable trace after initial registration
         this.trace = true;
+        GUI = new RealtimeReadAnalyzerMVC();
     }
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		if(args.length == 1){
 			try {
 				RealtimeReadAnalyzer analyser = new RealtimeReadAnalyzer(Paths.get(args[0]));
-				//analyser.watchForFilesAndAnalyse();
-				analyser.concatenateNewReadToAlignment();
+				analyser.watchForFilesAndAnalyse();
+				//analyser.analyse();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -110,10 +109,7 @@ public class RealtimeReadAnalyzer {
 	            if(event.kind().name().equals("ENTRY_CREATE")){
 		            // print out event
 		            System.out.format("%s: %s\n", event.kind().name(), child);
-		            convertFast5();
-		            concatenateNewReadToAlignment();
-		            realign();
-		            buildPhylogeny();
+		            analyse();
 	            }
 	
 	        }
@@ -130,65 +126,67 @@ public class RealtimeReadAnalyzer {
 	        }
 	    }
 	}
+	
+	/**
+	 * convert fast5 to fastq then fasta
+	 * concatenate alignment
+	 * re-align
+	 * infer phylogeny
+	 */
+	private void analyse(){
+		// extract fasta from fast5
+        convertFast5();
+        // may be redundant
+        convertFastQ();
+        // muscle
+        realign();
+        // RAxML
+        File finishedPhylogeny = buildPhylogeny();
+        // update GUI with newest phylogeny
+        GUI.updatePhylogeny(finishedPhylogeny);
+	}
 
 	/**
 	 * build a phylogeny from output.fa.stops.removed.phy with raxml
 	 */
-	private void buildPhylogeny() {
-		// TODO Auto-generated method stub
+	private File buildPhylogeny() {
 		long seed = System.currentTimeMillis();
-		File alignment = new File("/Users/joeparker/Documents/all_work/programming/metrichor/analyses/output.fa.stops.removed.phy");
-		File workDir = new File("~/Documents/all_work/programming/metrichor/analyses/");
 		String runID = "realtme"+seed;
-		RAxMLAnalysisSGE ra = new RAxMLAnalysisSGE(alignment, workDir, null, runID, RAxMLAnalysisSGE.NTmodelOptions.GTRCAT, RAxMLAnalysisSGE.algorithmOptions.e);
-		ra.setTreeConstraint(false);
-		ra.setMultifuricatingConstraint(false);
-		ra.setNoStartTree(true);
-		ra.setBinaryDir(new File("/Applications/Phylogenetics/RAxML/RAxML-7.2.8-ALPHA/raxmlHPC"));
-	//	ra.setWorkingDir(this.workDir);
-		//ra.RunAnalysis();
-		new VerboseSystemCommand("/Applications/Phylogenetics/RAxML/RAxML-7.2.8-ALPHA/raxmlHPC -m GTRCAT -n "+runID+" -s /Users/joeparker/Documents/all_work/programming/metrichor/analyses/output.fa.stops.removed.phy");
+		new VerboseSystemCommand("/Applications/Phylogenetics/RAxML/RAxML-7.2.8-ALPHA/raxmlHPC -m GTRCAT -n "+runID+" -s /Users/joeparker/Documents/all_work/programming/metrichor/analyses/aligned.phy");
+		return new File("/Users/joeparker/Documents/all_work/programming/metrichor/RAxML_bestTree."+runID);
 	}
 
 	/**
 	 * align input.fa with muscle  (to output.fa) and convert to .phy with PrepareFilesForPaml
 	 */
 	private void realign() {
-		// TODO Auto-generated method stub
 		// muscle -in analyses/input.fa -out analyses/output.fa
-		new VerboseSystemCommand("muscle -in /Users/joeparker/Documents/all_work/programming/metrichor/analyses/input.fa -out /Users/joeparker/Documents/all_work/programming/metrichor/analyses/output.fa");
-		// java -jar /Users/joeparker/Documents/all_work/convergence_pipeline_alphas/PrepareFilesForPaml.jar analyses/output.fa
-		new VerboseSystemCommand("java -jar /Users/joeparker/Documents/all_work/convergence_pipeline_alphas/PrepareFilesForPaml.jar /Users/joeparker/Documents/all_work/programming/metrichor/analyses/output.fa");
-		//AlignedSequenceRepresentation asr = new AlignedSequenceRepresentation();
+		new VerboseSystemCommand("muscle -in /Users/joeparker/Documents/all_work/programming/metrichor/analyses/input.fa -out /Users/joeparker/Documents/all_work/programming/metrichor/analyses/aligned.fa -maxiters 1 -diags");
+		// convert output to phylip
+		AlignedSequenceRepresentation asr = new AlignedSequenceRepresentation();
+		try {
+			asr.loadSequences(new File("/Users/joeparker/Documents/all_work/programming/metrichor/analyses/aligned.fa"), false);
+			asr.writePhylipFile(new File("/Users/joeparker/Documents/all_work/programming/metrichor/analyses/aligned.phy"), false);
+		} catch (TaxaLimitException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
-	 * read in output.fa and also the new read from FQR, concatenate them, and write out to input.fa
+	 * read in new read from FQR, concatenate them, and write out to input.fa
 	 */
-	private void concatenateNewReadToAlignment() {
-		// TODO Auto-generated method stub
-		// FQR
-		// CapitalizedFileReader
-		// BasicFileWriter
-		//
-        FastqSimpleReader fqr = new FastqSimpleReader(new File("/Users/joeparker/Documents/all_work/programming/metrichor/converted_reads/out.fasta"));
+	private void convertFastQ() {
+       FastqSimpleReader fqr = new FastqSimpleReader(new File("/Users/joeparker/Documents/all_work/programming/metrichor/converted_reads/out.fastq"));
         System.out.println(fqr.getParsedDataAsString());
+        //
         File outputFile = new File("/Users/joeparker/Documents/all_work/programming/metrichor/analyses/input.fa");
         new BasicFileWriter(outputFile,fqr.getParsedDataAsString());
-		AlignedSequenceRepresentation asr = new AlignedSequenceRepresentation();
-		try {
-			asr.loadSequences(fqr.getParsedData(), false);
-			asr.writePhylipFile(outputFile, false);
-		} catch (TaxaLimitException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
 
+	/* runs the mahesh script which takes all fast5 in a dir and concatenates them to a single fasta file */
 	private void convertFast5(){
 		new VerboseSystemCommand("printenv");		
-		new VerboseSystemCommand("/Users/joeparker/Documents/all_work/programming/metrichor/runme.sh /Users/joeparker/Documents/all_work/programming/metrichor/converted_reads/out.fasta");		
+		new VerboseSystemCommand("/Users/joeparker/Documents/all_work/programming/metrichor/runme.sh /Users/joeparker/Documents/all_work/programming/metrichor/converted_reads/out.fastq");		
 	}
 	
 	/**
