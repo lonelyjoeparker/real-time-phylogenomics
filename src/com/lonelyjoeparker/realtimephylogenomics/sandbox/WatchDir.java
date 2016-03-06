@@ -31,11 +31,15 @@ package com.lonelyjoeparker.realtimephylogenomics.sandbox;
  */
 
 import java.nio.file.*;
+
 import static java.nio.file.StandardWatchEventKinds.*;
 import static java.nio.file.LinkOption.*;
+
 import java.nio.file.attribute.*;
 import java.io.*;
 import java.util.*;
+
+import uk.ac.qmul.sbcs.evolution.convergence.util.VerboseSystemCommand;
 
 /**
  * Example to watch a directory (or tree) for changes to files.
@@ -143,7 +147,9 @@ public class WatchDir {
 
                 // print out event
                 System.out.format("%s: %s\n", event.kind().name(), child);
-
+                String runCommand = "say -v Vicki "+event.kind().name().toString()+" "+child.toString();
+                runCommand = "/bin/bash /Users/joeparker/docker_nanocall_run.sh "+name.toString();
+                new VerboseSystemCommand(runCommand);
                 // if directory is created, and watching recursively, then
                 // register it and its sub-directories
                 if (recursive && (kind == ENTRY_CREATE)) {
