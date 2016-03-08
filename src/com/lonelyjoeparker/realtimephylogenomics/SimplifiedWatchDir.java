@@ -127,9 +127,10 @@ public class SimplifiedWatchDir {
 	    this.shell_script = shell_scriptpath;
 	    this.output_dir = output_dirpath;
         register(input_dir);
-	
+        System.out.println("Registered a watch service:\ndir\t"+input_dir+"\nshell\t"+shellpath+"\nscript\t"+shell_scriptpath+"\noutput\t"+output_dirpath);
 	    // enable trace after initial registration
-	    this.trace = true;
+	    System.out.println("\nWatching... REMEMBER, this isn't a daemon process - close this terminal or exit the process, and the dir will no longer be watched!\n");
+        this.trace = true;
 	}
 
 	/**
