@@ -51,6 +51,9 @@ public class SimplifiedWatchDir {
     private final Map<WatchKey,Path> keys;
     private final boolean recursive;
     private boolean trace = false;
+    private Path shell;
+    private Path shell_script;
+    private Path output_dir;
 
     @SuppressWarnings("unchecked")
     static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -61,7 +64,8 @@ public class SimplifiedWatchDir {
      * Register the given directory with the WatchService
      */
     private void register(Path dir) throws IOException {
-        WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+//        WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY); // only register for create events
+        WatchKey key = dir.register(watcher, ENTRY_CREATE);
         if (trace) {
             Path prev = keys.get(key);
             if (prev == null) {
@@ -113,6 +117,22 @@ public class SimplifiedWatchDir {
     }
 
     /**
+	 * Creates a WatchService and registers the given directory
+	 */
+	public SimplifiedWatchDir(Path input_dir, Path shellpath, Path shell_scriptpath, Path output_dirpath ) throws IOException {
+	    this.watcher = FileSystems.getDefault().newWatchService();
+	    this.keys = new HashMap<WatchKey,Path>();
+	    this.recursive = false;
+	    this.shell = shellpath;
+	    this.shell_script = shell_scriptpath;
+	    this.output_dir = output_dirpath;
+        register(input_dir);
+	
+	    // enable trace after initial registration
+	    this.trace = true;
+	}
+
+	/**
      * Process all events for keys queued to the watcher
      */
     public void processEvents() {
@@ -148,7 +168,7 @@ public class SimplifiedWatchDir {
                 // print out event
                 System.out.format("%s: %s\n", event.kind().name(), child);
                 String runCommand = "say -v Vicki "+event.kind().name().toString()+" "+child.toString();
-                runCommand = "/bin/bash /Users/joeparker/docker_nanocall_run.sh "+name.toString();
+                runCommand = this.shell.toString()+" "+this.shell_script.toString()+" "+name.toString()+" "+this.output_dir.toString();
                 new VerboseSystemCommand(runCommand);
                 // if directory is created, and watching recursively, then
                 // register it and its sub-directories
@@ -177,14 +197,15 @@ public class SimplifiedWatchDir {
     }
 
     public static void usage() {
-        System.err.println("usage: java WatchDir [-r] dir");
+        System.err.println("Usage: java WatchDir [-r] <dir_to_watch> <shell_to_run> <shell_script_to_run> <output_dir>");
         System.exit(-1);
     }
 
     public static void main(String[] args) throws IOException {
         // parse arguments
-        if (args.length != 4 )
+        if (args.length == 0 || args.length > 4)
             usage();
+        Path dir, shell, script, out;
         boolean recursive = false;
         int dirArg = 0;
         if (args[0].equals("-r")) {
@@ -192,10 +213,16 @@ public class SimplifiedWatchDir {
                 usage();
             recursive = true;
             dirArg++;
+            dir = Paths.get(args[dirArg]);
+            // register directory and process its events
+            new SimplifiedWatchDir(dir, recursive).processEvents();
+        }else{
+        	dir = Paths.get(args[0]);
+        	shell = Paths.get(args[1]);
+        	script = Paths.get(args[2]);
+        	out = Paths.get(args[3]);
+            new SimplifiedWatchDir(dir, shell, script, out).processEvents(); 	
         }
 
-        // register directory and process its events
-        Path dir = Paths.get(args[dirArg]);
-        new SimplifiedWatchDir(dir, recursive).processEvents();
     }
 }
