@@ -169,8 +169,12 @@ public class SimplifiedWatchDir {
                 // print out event
                 System.out.format("%s: %s\n", event.kind().name(), child);
                 String runCommand = "say -v Vicki "+event.kind().name().toString()+" "+child.toString();
-                runCommand = this.shell.toString()+" "+this.shell_script.toString()+" "+name.toString()+" "+this.output_dir.toString();
-                new VerboseSystemCommand(runCommand);
+                if(child.toString().endsWith("fast5")){
+                    runCommand = this.shell.toString()+" "+this.shell_script.toString()+" "+name.toString()+" "+this.output_dir.toString();
+                    new VerboseSystemCommand(runCommand);
+                }else{
+                	System.out.println("seems to be a tmp file: "+child.toString());
+                }
                 // if directory is created, and watching recursively, then
                 // register it and its sub-directories
                 if (recursive && (kind == ENTRY_CREATE)) {
