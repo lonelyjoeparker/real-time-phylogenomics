@@ -1,3 +1,9 @@
 /bin/
 .DS_Store
 /examples/
+subsample_*.fasta
+*.nin
+*.nsq
+*.nhr
+*.out
+*.summary
