@@ -55,7 +55,7 @@ READS_MISEQ_LYRATA=$BASEPATH/phylogenome_wales/inputs/AL1a_S3_L001_all.trimmed.f
 # other
 COMPARE_BLAST=$BASEPATH/phylogenome_wales/compareBlastHits.pl
 BLASTN=/usr/bin/blastn
-BLAST_PARAMS=" -num_threads 8 -evalue 1.0 -outfmt \"6 qacc length pident evalue\" -max_target_seqs 1  -max_hsps 1 "
+BLAST_PARAMS=" -num_threads 4 -evalue 1.0 -outfmt \"6 qacc length pident evalue\" -max_target_seqs 1  -max_hsps 1 "
 
 # attempt to check the required, hardcoded variables are present
 if ! test -e "$COMPARE_BLAST"
@@ -100,6 +100,12 @@ function simulate_and_analyse {
   #	1d ONT lyrata vs DB lyrata (FP)
   $BLASTN -db $output_lyrata_sim -query $READS_ONT_LYRATA  -num_threads 8 -evalue 1.0 -outfmt "6 qacc length pident evalue" -max_target_seqs 1  -max_hsps 1 > $BLAST_OUT/1d_type-pores_db-lyrataSIM_query-lyrata.out
 
+  # 3. Pairwise comparisons - ONT
+  #	3a ONT thaliana, TP (thaliana)(1a) vs FP (lyrata)(1b)
+  $COMPARE_BLAST $BLAST_OUT/1a_type-pores_db-thalianaSIM_query-thaliana.out $BLAST_OUT/1b_type-pores_db-lyrataSIM_query-thaliana.out > $BLAST_OUT/pairwise_SIM_type-pores_tp-thaliana_fp-lyrata.out 2> $BLAST_OUT/pairwise_SIM_type-pores_tp-thaliana_fp-lyrata.out.summary
+  #	3b ONT lyrata, TP (lyrata)(1d) vs FP (thaliana)(1c)
+  $COMPARE_BLAST $BLAST_OUT/1d_type-pores_db-lyrataSIM_query-lyrata.out $BLAST_OUT/1c_type-pores_db-thalianaSIM_query-lyrata.out > $BLAST_OUT/pairwise_SIM_type-pores_tp-lyrata_fp-thaliana.out 2> $BLAST_OUT/pairwise_SIM_type-pores_tp-lyrata_fp-thaliana.out.summary
+
   # 2. Blast MiSeq reads:
   #	2a MiSeq thaliana vs DB thaliana (TP)
   $BLASTN -db $output_thalia_sim -query $READS_MISEQ_THALIANA  -num_threads 8 -evalue 1.0 -outfmt "6 qacc length pident evalue" -max_target_seqs 1  -max_hsps 1 > $BLAST_OUT/2a_type-miseq_db-thalianaSIM_query-thaliana.out
@@ -110,12 +116,6 @@ function simulate_and_analyse {
   #	2d MiSeq lyrata vs DB lyrata (FP)
   $BLASTN -db $output_lyrata_sim -query $READS_MISEQ_LYRATA  -num_threads 8 -evalue 1.0 -outfmt "6 qacc length pident evalue" -max_target_seqs 1  -max_hsps 1 > $BLAST_OUT/2d_type-miseq_db-lyrataSIM_query-lyrata.out
 
-  # 3. Pairwise comparisons - ONT
-  #	3a ONT thaliana, TP (thaliana)(1a) vs FP (lyrata)(1b)
-  $COMPARE_BLAST $BLAST_OUT/1a_type-pores_db-thalianaSIM_query-thaliana.out $BLAST_OUT/1b_type-pores_db-lyrataSIM_query-thaliana.out > $BLAST_OUT/pairwise_SIM_type-pores_tp-thaliana_fp-lyrata.out 2> $BLAST_OUT/pairwise_SIM_type-pores_tp-thaliana_fp-lyrata.out.summary
-  #	3b ONT lyrata, TP (lyrata)(1d) vs FP (thaliana)(1c)
-  $COMPARE_BLAST $BLAST_OUT/1d_type-pores_db-lyrataSIM_query-lyrata.out $BLAST_OUT/1c_type-pores_db-thalianaSIM_query-lyrata.out > $BLAST_OUT/pairwise_SIM_type-pores_tp-lyrata_fp-thaliana.out 2> $BLAST_OUT/pairwise_SIM_type-pores_tp-lyrata_fp-thaliana.out.summary
-
   # 4. Pairwise comparisons - MiSeq
   #	4a MiSeq thaliana, TP (thaliana)(2a) vs FP (lyrata)(2b)
   $COMPARE_BLAST $BLAST_OUT/2a_type-miseq_db-thalianaSIM_query-thaliana.out $BLAST_OUT/2b_type-miseq_db-lyrataSIM_query-thaliana.out > $BLAST_OUT/pairwise_SIM_type-miseq_tp-thaliana_fp-lyrata.out 2> $BLAST_OUT/pairwise_SIM_type-miseq_tp-thaliana_fp-lyrata.out.summary
@@ -124,9 +124,9 @@ function simulate_and_analyse {
 
 }
 
-
-simulate_and_analyse 3400000 simulate_nelumbo
-simulate_and_analyse 1400000 simulate_potato
-simulate_and_analyse 2470000 simulate_pepper
-simulate_and_analyse  104000 simulate_ash
-simulate_and_analyse 1280000 simulate_rubber
+#run in parallel (ish)
+`simulate_and_analyse 3400000 simulate_nelumbo >simulate_nelumbo.out 2>simulate_nelumbo.err &`
+`simulate_and_analyse 1400000 simulate_potato >simulate_potato.out 2>simulate_potato.err &`
+`simulate_and_analyse 2470000 simulate_pepper >simulate_pepper.out 2>simulate_pepper.err &`
+`simulate_and_analyse  104000 simulate_ash >simulate_ash.out 2>simulate_ash.err &`
+`simulate_and_analyse 1280000 simulate_rubber >simulate_rubber.out 2>simulate_rubber.err &`
