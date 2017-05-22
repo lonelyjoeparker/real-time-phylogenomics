@@ -11,11 +11,23 @@ from math import floor
 import warnings
 import matplotlib.pyplot as plt
 import numpy as np
+import argparse
 
+# set up an argument parser
+N50 = -1
+parser = argparse.ArgumentParser(description='Chop a genome assembly up into pooer-quality chunks')
+parser.add_argument('N50',help='target output N50 (Kbp, approximate)',nargs=1,type=int)
+parser.add_argument('output_dir',help='target output directory',nargs='?', type=argparse.FileType('d'))
 screwy_sample = SeqIO.parse('/home/joe/Documents/all_work/programming/repo-git/real-time-phylogenomics/wales_analyses/in-silico-reference-genome-digest/subsample_A.lyra_0001000_draws.fasta','fasta')
 thal_genome = SeqIO.parse("/media/joe/BiSlDi/genomes/Arabidopsis_thaliana/arabidopsis_thaliana_GCF_000001735.3_TAIR10_genomic.fna",'fasta')
 alyr_genomic_data = SeqIO.parse("/media/joe/BiSlDi/genomes/Arabidopsis_lyrata_petraea/Arabidopsis_lytata_ADBK01.1.fsa_nt",'fasta')
 
+N50 = parser.parse_args().N50
+output_dir = parser.parse_args().output_dir
+
+print(N50,output_dir)
+
+quit()
 
 seq_lens = []
 
@@ -37,24 +49,8 @@ for seq in alyr_genomic_data:
     seq_lens_l.append(len(seq))
     pass
 
-    
-len(seq_lens)
-print(seq_lens[1:10])
-print(len(seq_lens))
-print(mean(seq_lens))
-print(mean(seq_lens_t))
-print(mean(seq_lens_l))
-print(median(seq_lens_l))
 
-
-# In[ ]:
-
-
-plt.hist(seq_lens_l,bins=range(min(seq_lens_l), max(seq_lens_l) + 500, 500))
-plt.show()
-
-
-# In[10]:
+# In[2]:
 
 thal_genome = SeqIO.parse("/media/joe/BiSlDi/genomes/Arabidopsis_thaliana/arabidopsis_thaliana_GCF_000001735.3_TAIR10_genomic.fna",'fasta')
 for chromosome in thal_genome:
@@ -63,7 +59,7 @@ for chromosome in thal_genome:
 
 # In[3]:
 
-# divide a sequence up 
+# divide a sequence up
 
 all_contigs_bin = []
 all_contigs_lengths = []
@@ -95,18 +91,8 @@ for scaffold in SeqIO.parse("/media/joe/BiSlDi/genomes/Arabidopsis_thaliana/arab
             all_contigs_bin.append(new_piece)
             print('last piece ',str(len(new_piece)))
             remaining_length=0 # run out of sequence
-    
+
     print(scaffold.id,' mean ',str(mean(contigs_lengths)),' N ',str(len(contigs_lengths)))
 print('overall mean ',str(mean(all_contigs_lengths)),' N ',str(len(all_contigs_lengths)))
 
 SeqIO.write(all_contigs_bin,'A.thal.downsample_reference.fa','fasta')
-
-#plt.hist(all_contigs_lengths,bins=range(min(all_contigs_lengths), max(all_contigs_lengths) + 500, 500))
-#plt.show()
-
-
-# In[3]:
-
-sentence='this is a valid_le'
-sentence[4:]
-
