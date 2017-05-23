@@ -125,8 +125,12 @@ function simulate_and_analyse {
 }
 
 #run in parallel (ish)
-`simulate_and_analyse 3400000 simulate_nelumbo >simulate_nelumbo.out 2>simulate_nelumbo.err &`
-`simulate_and_analyse 1400000 simulate_potato >simulate_potato.out 2>simulate_potato.err &`
-`simulate_and_analyse 2470000 simulate_pepper >simulate_pepper.out 2>simulate_pepper.err &`
-`simulate_and_analyse  104000 simulate_ash >simulate_ash.out 2>simulate_ash.err &`
-`simulate_and_analyse 1280000 simulate_rubber >simulate_rubber.out 2>simulate_rubber.err &`
+`simulate_and_analyse  10000 simulate_10E4_1 >/dev/null 2>/dev/null &`
+`simulate_and_analyse  10000 simulate_10E4_2 >/dev/null 2>/dev/null &`
+`simulate_and_analyse  10000 simulate_10E4_3 >/dev/null 2>/dev/null &`
+`simulate_and_analyse 100000 simulate_10E5_1 >/dev/null 2>/dev/null &`
+`simulate_and_analyse 100000 simulate_10E5_2 >/dev/null 2>/dev/null &`
+`simulate_and_analyse 100000 simulate_10E5_3 >/dev/null 2>/dev/null &`
+`simulate_and_analyse   1000 simulate_10E3_1 >/dev/null 2>/dev/null &`
+`simulate_and_analyse   1000 simulate_10E3_2 >/dev/null 2>/dev/null &`
+`simulate_and_analyse   1000 simulate_10E3_3 >/dev/null 2>/dev/null &`
