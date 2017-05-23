@@ -7,3 +7,11 @@ subsample_*.fasta
 *.nhr
 *.out
 *.summary
+/greptest/
+/.classpath
+/.project
+/all.POWC.err
+/checklist-for-sequencing
+/md
+/nanocall.err
+/sum_blast.test.tdf
