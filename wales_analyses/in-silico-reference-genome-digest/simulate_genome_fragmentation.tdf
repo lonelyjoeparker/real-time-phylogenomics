@@ -1,0 +1,45 @@
+sortorder default	input	N50	sample assumed	platform	TP DB	FP DB	2-way	1-way T	1-way F	length bias mean	idents bias mean
+NA	sim 1000	1000	thaliana	pores	thalianaSIM	lyrataSIM	21137.33	11484.67	137.33	684.36	579.52
+NA	sim 10000	10000	thaliana	pores	thalianaSIM	lyrataSIM	21259.00	11438.67	112.67	1260.17	1061.37
+NA	sim 100000	100000	thaliana	pores	thalianaSIM	lyrataSIM	21273.67	11432.67	110.00	1418.11	1193.61
+NA	ash	104000	thaliana	pores	thalianaSIM	lyrataSIM	21273.22	11432.89	110.33	1416.40	1192.25
+NA	rubber	1280000	thaliana	pores	thalianaSIM	lyrataSIM	21274.41	11432.30	110.11	1427.08	1201.24
+NA	potato	1300000	thaliana	pores	thalianaSIM	lyrataSIM	21274.80	11432.10	109.70	1431.42	1204.89
+NA	pepper	2470000	thaliana	pores	thalianaSIM	lyrataSIM	21274.93	11432.37	109.90	1433.18	1206.38
+NA	nelumbo	3400000	thaliana	pores	thalianaSIM	lyrataSIM	21274.98	11432.12	109.97	1434.06	1207.11
+42	sim 5000000	5000000	thaliana	pores	thalianaSIM	lyrataSIM	21275.00	11433.00	110.00	1438.96	1211.24
+46	sim 10000000	10000000	thaliana	pores	thalianaSIM	lyrataSIM	21275.00	11432.00	110.00	1434.98	1207.87
+NA	Empirical	23459830	thaliana	pores	A. thaliana	A.lyrata combined*	22386.00	10322.00	378.00	1323.87	1115.00
+NA	sim 1000	1000	thaliana	miseq	thalianaSIM	lyrataSIM	4093061.00	1236565.00	11913.00	93.39	104.83
+NA	sim 10000	10000	thaliana	miseq	thalianaSIM	lyrataSIM	4101063.33	1229005.33	11876.00	98.28	110.69
+NA	sim 100000	100000	thaliana	miseq	thalianaSIM	lyrataSIM	4102255.00	1227872.33	11879.33	99.05	111.60
+48	ash	104000	thaliana	miseq	thalianaSIM	lyrataSIM	4102235.00	1227902.00	11882.00	99.00	111.55
+72	rubber	1280000	thaliana	miseq	thalianaSIM	lyrataSIM	4102380.00	1227759.00	11882.00	99.07	111.64
+66	potato	1300000	thaliana	miseq	thalianaSIM	lyrataSIM	4102390.00	1227748.00	11881.00	99.07	111.64
+60	pepper	2470000	thaliana	miseq	thalianaSIM	lyrataSIM	4102387.00	1227752.00	11882.00	99.08	111.64
+54	nelumbo	3400000	thaliana	miseq	thalianaSIM	lyrataSIM	4102389.00	1227750.00	11882.00	99.08	111.65
+40	sim 5000000	5000000	thaliana	miseq	thalianaSIM	lyrataSIM	4102392.00	1227746.00	11882.00	99.08	111.65
+44	sim 10000000	10000000	thaliana	miseq	thalianaSIM	lyrataSIM	4102386.00	1227753.00	11882.00	99.08	111.65
+NA	Empirical	23459830	thaliana	miseq	A. thaliana	A.lyrata combined*	7098032.00	2140403.00	53056.00	83.61	96.00
+NA	sim 1000	1000	lyrata	pores	lyrataSIM	thalianaSIM	98.67	66.33	4.00	537.01	440.57
+NA	sim 10000	10000	lyrata	pores	lyrataSIM	thalianaSIM	99.00	66.00	4.00	608.58	498.40
+NA	sim 100000	100000	lyrata	pores	lyrataSIM	thalianaSIM	99.00	66.00	4.00	627.64	514.98
+NA	ash	104000	lyrata	pores	lyrataSIM	thalianaSIM	99.00	66.00	4.00	642.05	527.35
+NA	rubber	1280000	lyrata	pores	lyrataSIM	thalianaSIM	99.00	66.00	4.00	659.85	541.69
+NA	potato	1300000	lyrata	pores	lyrataSIM	thalianaSIM	99.00	66.00	4.00	657.88	540.20
+NA	pepper	2470000	lyrata	pores	lyrataSIM	thalianaSIM	99.00	66.00	4.00	657.22	539.70
+NA	nelumbo	3400000	lyrata	pores	lyrataSIM	thalianaSIM	99.00	66.00	4.00	655.62	538.37
+41	sim 5000000	5000000	lyrata	pores	lyrataSIM	thalianaSIM	99.00	66.00	4.00	651.87	535.07
+45	sim 10000000	10000000	lyrata	pores	lyrataSIM	thalianaSIM	99.00	66.00	4.00	656.89	539.45
+NA	Empirical	24464547	lyrata	pores	A.lyrata combined*	A. thaliana	101.00	76.00	2.00	698.25	575.00
+NA	sim 1000	1000	lyrata	miseq	lyrataSIM	thalianaSIM	3766921.00	1398527.33	65695.67	94.87	101.48
+NA	sim 10000	10000	lyrata	miseq	lyrataSIM	thalianaSIM	3775570.33	1391627.67	65401.33	94.93	102.30
+NA	sim 100000	100000	lyrata	miseq	lyrataSIM	thalianaSIM	3777040.00	1390423.67	65302.33	94.83	102.31
+47	ash	104000	lyrata	miseq	lyrataSIM	thalianaSIM	3777083.00	1390379.00	65299.00	94.90	102.38
+71	rubber	1280000	lyrata	miseq	lyrataSIM	thalianaSIM	3777175.00	1390312.00	65299.00	94.88	102.38
+65	potato	1300000	lyrata	miseq	lyrataSIM	thalianaSIM	3777170.00	1390319.00	65297.00	94.88	102.37
+59	pepper	2470000	lyrata	miseq	lyrataSIM	thalianaSIM	3777185.00	1390304.00	65297.00	94.87	102.37
+53	nelumbo	3400000	lyrata	miseq	lyrataSIM	thalianaSIM	3777186.00	1390303.00	65297.00	94.87	102.37
+39	sim 5000000	5000000	lyrata	miseq	lyrataSIM	thalianaSIM	3777185.00	1390303.00	65298.00	94.87	102.37
+43	sim 10000000	10000000	lyrata	miseq	lyrataSIM	thalianaSIM	3777186.00	1390303.00	65297.00	94.87	102.37
+NA	Empirical	24464547	lyrata	miseq	A.lyrata combined*	A. thaliana	6256969.00	2907921.00	24329.00	108.99	117.00
