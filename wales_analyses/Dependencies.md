@@ -24,8 +24,10 @@ Software | VERSION | Citation / purpose
 -------- | ------- | ------------------
 Trimmomatic | 0.32 | Bolger et al. (2014) / Illumina read adapter trimming
 ncbi-blast suite (BLASTN, BLASTP, makeblastdb) | 2.2.31 | Camacho et al. (2008) /  Sequence matching/mapping
+Docker | NA | NA
 nanocall | 0.6.13 | [https://github.com/mateidavid/nanocall] / Nanopore basecalling
 BWA | 0.7.12-r1039 | Li & Durbin, (2009) / read mapping
+samtools | NA | NA
 LAST | 581 | Kielbasa et al. (2011) / read mapping/alignment
 ROCR | NA | Sing et al. (2005) / Classifier performance evaluation
 ABYSS | 1.9.0 | Simpson et al. (2009) / de novo genome assembly (short-read)

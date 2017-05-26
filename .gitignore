@@ -7,6 +7,17 @@ subsample_*.fasta
 *.nhr
 *.out
 *.summary
+*.pdf
+*.png
+*.tdf
+*.xls
+*.xlsx
+*.ods
+*.gz
+*.fa
+*.fasta
+*.cegma
+*.err
 /greptest/
 /.classpath
 /.project
