@@ -6,4 +6,4 @@ These scripts are used in the Parker _et al._ (2017) paper to simulate poor-cont
 ## Outputs
 ![Image of plot A](simulate_fragments_N50-length.png)
 
-![Image of plot B](simulate_fragments_N50-length.png)
+![Image of plot B](simulate_fragments_N50-idents.png)
