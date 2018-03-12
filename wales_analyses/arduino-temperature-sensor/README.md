@@ -12,7 +12,7 @@ This code is modified (a bit) from learningaboutelectronics.com’s [example](ht
 
  - Arduino Uno / Genuino
  - Wire (~5mm dia gives good conductance for electricity without seeming to cold-bridge to the outside of the box ‘too’ badly - based on ‘feeling the wire next to a -20ºC box’ tests), solder, tape etc
- - (LM335AZ)[https://www.google.co.uk/search?q=lm335az&oq=lm335az&aqs=chrome..69i57.2262j0j7&sourceid=chrome&ie=UTF-8] temperature transducer and 2KOhm resistor.
+ - [LM335AZ](https://www.google.co.uk/search?q=lm335az&oq=lm335az&aqs=chrome..69i57.2262j0j7&sourceid=chrome&ie=UTF-8) temperature transducer and 2KOhm resistor.
  - 4x standard LEDs and 1kOhm resistors.
 
 ## Setup / construction
