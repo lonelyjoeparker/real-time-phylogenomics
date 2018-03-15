@@ -39,6 +39,8 @@ import java.nio.file.attribute.*;
 import java.io.*;
 import java.util.*;
 
+import com.lonelyjoeparker.realtimephylogenomics.sandbox.SequenceFileType;
+
 import uk.ac.qmul.sbcs.evolution.convergence.util.VerboseSystemCommand;
 
 /**
@@ -49,11 +51,12 @@ public class SimplifiedWatchDir {
 
     private final WatchService watcher;
     private final Map<WatchKey,Path> keys;
-    private final boolean recursive;
+    private final boolean recursive;	// watch dir recursively
     private boolean trace = false;
-    private Path shell;
-    private Path shell_script;
-    private Path output_dir;
+    private Path shell;					// which shell to use on processEvents()
+    private Path shell_script;			// which script to use with shell
+    private Path output_dir;			// output to write to
+    private SequenceFileType fileType;	// what sequence files are we looking for (fasta / fastq / fast5)
 
     @SuppressWarnings("unchecked")
     static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -103,7 +106,7 @@ public class SimplifiedWatchDir {
         this.watcher = FileSystems.getDefault().newWatchService();
         this.keys = new HashMap<WatchKey,Path>();
         this.recursive = recursive;
-
+       
         if (recursive) {
             System.out.format("Scanning %s ...\n", dir);
             registerAll(dir);
@@ -118,14 +121,16 @@ public class SimplifiedWatchDir {
 
     /**
 	 * Creates a WatchService and registers the given directory
+     * @param fileType - which file type to watch for
 	 */
-	public SimplifiedWatchDir(Path input_dir, Path shellpath, Path shell_scriptpath, Path output_dirpath ) throws IOException {
+	public SimplifiedWatchDir(Path input_dir, SequenceFileType fileType, Path shellpath, Path shell_scriptpath, Path output_dirpath ) throws IOException {
 	    this.watcher = FileSystems.getDefault().newWatchService();
 	    this.keys = new HashMap<WatchKey,Path>();
 	    this.recursive = false;
 	    this.shell = shellpath;
 	    this.shell_script = shell_scriptpath;
 	    this.output_dir = output_dirpath;
+	    this.fileType = fileType;
         register(input_dir);
         System.out.println("Registered a watch service:\ndir\t"+input_dir+"\nshell\t"+shellpath+"\nscript\t"+shell_scriptpath+"\noutput\t"+output_dirpath);
 	    // enable trace after initial registration
@@ -169,7 +174,7 @@ public class SimplifiedWatchDir {
                 // print out event
                 System.out.format("%s: %s\n", event.kind().name(), child);
                 String runCommand = "say -v Vicki "+event.kind().name().toString()+" "+child.toString();
-                if(child.toString().endsWith("fast5")){
+                if(child.toString().endsWith(fileType.toString())){
                     runCommand = this.shell.toString()+" "+this.shell_script.toString()+" "+name.toString()+" "+this.output_dir.toString();
                     new VerboseSystemCommand(runCommand);
                 }else{
@@ -202,16 +207,17 @@ public class SimplifiedWatchDir {
     }
 
     public static void usage() {
-        System.err.println("Usage: java WatchDir [-r] <dir_to_watch> <shell_to_run> <shell_script_to_run> <output_dir>");
+        System.err.println("Usage: java WatchDir [-r] <dir_to_watch> <filetype: fasta | fastq | fast5> <shell_to_run> <shell_script_to_run> <output_dir>");
         System.exit(-1);
     }
 
     public static void main(String[] args) throws IOException {
         // parse arguments
-        if (args.length == 0 || args.length > 4)
+        if (args.length == 0 || args.length > 5)
             usage();
         Path dir, shell, script, out;
         boolean recursive = false;
+        SequenceFileType fileType = SequenceFileType.fasta;
         int dirArg = 0;
         if (args[0].equals("-r")) {
             if (args.length < 2)
@@ -223,10 +229,11 @@ public class SimplifiedWatchDir {
             new SimplifiedWatchDir(dir, recursive).processEvents();
         }else{
         	dir = Paths.get(args[0]);
-        	shell = Paths.get(args[1]);
-        	script = Paths.get(args[2]);
-        	out = Paths.get(args[3]);
-            new SimplifiedWatchDir(dir, shell, script, out).processEvents(); 	
+        	fileType = SequenceFileType.valueOf(args[1]);
+        	shell = Paths.get(args[2]);
+        	script = Paths.get(args[3]);
+        	out = Paths.get(args[4]);
+            new SimplifiedWatchDir(dir, fileType, shell, script, out).processEvents(); 	
         }
 
     }
